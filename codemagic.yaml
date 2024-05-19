@@ -1,18 +1,29 @@
 workflows:
-    sample-workflow:
-        name: Codemagic Sample Workflow
-        max_build_duration: 120
-        instance_type: mac_mini_m1
-workflows:
-    android-workflow-id:
-        name: Android Sample Workflow
-        # .......    
-        # .......
-        # .......  
-    ios-workflow-id:
-        name: iOS Sample Workflow
-        # ......
-workflows:
-    sample-workflow:
-        environment:
-            flutter: stable        
+  default-workflow:
+    name: Default Workflow
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      vars:
+        PROJECT_NAME: "flutter_application"
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+      - name: Run tests
+        script: |
+          flutter test
+      - name: Build APK
+        script: |
+          flutter build apk --release
+      - name: Build iOS
+        script: |
+          flutter build ios --release --no-codesign
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - 213853@student.upm.edu.my
