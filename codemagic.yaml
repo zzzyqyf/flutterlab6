@@ -1,29 +1,25 @@
 workflows:
-  default-workflow:
-    name: Default Workflow
-    max_build_duration: 60
+  android-workflow:
+    name: Android Workflow
+    max_build_duration: 30
     instance_type: mac_mini_m1
     environment:
       flutter: stable
+      xcode: latest
+      cocoapods: defalut
       vars:
-        PROJECT_NAME: "flutter_application"
+        FIREBASE_PROJECT: "flutterlab6"
     scripts:
-      - name: Install dependencies
+      - name: Get Flutter Packages
         script: |
-          flutter pub get
-      - name: Run tests
+          flutter packages pub get
+     
+      - name: Build APK with flutter
         script: |
-          flutter test
-      - name: Build APK
+          flutter build apk --debug
+      - name: Create debug and test APK
         script: |
-          flutter build apk --release
-      - name: Build iOS
-        script: |
-          flutter build ios --release --no-codesign
-    artifacts:
-      - build/app/outputs/flutter-apk/app-release.apk
-      - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - 213853@student.upm.edu.my
+          set -ex
+          cd android
+
+
